@@ -1,5 +1,9 @@
-local_lib_path = "~/R_libs/"
+#local_lib_path = "~/R_libs/"
 
-install.packages('minpack.lm', lib=local_lib_path, repos = "http://cran.us.r-project.org")
-install.packages('argparse', lib=local_lib_path, repos = "http://cran.us.r-project.org")
-install.packages('.', repos=NULL, type="source", lib=local_lib_path)
+install.packages('minpack.lm', repos = "http://cran.us.r-project.org")
+install.packages('argparse', repos = "http://cran.us.r-project.org")
+install.packages('.', repos=NULL, type="source")
+
+#install.packages('minpack.lm', lib=local_lib_path, repos = "http://cran.us.r-project.org")
+#install.packages('argparse', lib=local_lib_path, repos = "http://cran.us.r-project.org")
+#install.packages('.', repos=NULL, type="source", lib=local_lib_path)
