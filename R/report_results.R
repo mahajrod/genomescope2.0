@@ -247,6 +247,8 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     total_len = (total_kmers-total_error_kmers)/(p*kcov)
     atotal_len = (total_kmers-total_error_kmers)/(p*akcov)
 
+    total_len_conf_interval_half_len = max(abs(total_len - atotal_len))
+    kcov_conf_interval_half_len = (kcov[2] - kcov[1]) / 2
     ## find kmers that fit the p peak model (no repeats)
     if (p==1)
     {
@@ -305,12 +307,18 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     repeat_kmers = max(0, total_kmers - unique_kmers - total_error_kmers)
 
     repeat_len=repeat_kmers/(p*kcov)
+    arepeat_len = repeat_kmers/(p*akcov)
+
+    repeat_len_conf_interval_half_len = max(abs(repeat_len - arepeat_len))
     if (repeat_kmers == 0) {
       unique_len = total_len
-    } else {
-      unique_len=unique_kmers/(p*kcov)
-    }
+      aunique_len = atotal_len
 
+    } else {
+      unique_len = unique_kmers/(p*kcov)
+      aunique_len = unique_kmers/(p*akcov)
+    }
+    unique_len_conf_interval_half_len = max(abs(unique_len - aunique_len))
     score = container[[2]]
 
     model_fit_allscore    = score$allscore
@@ -403,12 +411,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Linear Plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
+    "±", prettyNum(total_len_conf_interval_half_len, big.mark=","),
     "bp",
-    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    " uniq:", format(100*(aunique_len/atotal_len), digits=3),
+    #"±", format(100*(unique_len_conf_interval_half_len/atotal_len), digits=3),
     "% ", "\n",
     hetline, "\n",
-    " kcov:", format(akcov, digits=3),
+    " kcov:", format(akcov, digits=3), "±", format(kcov_conf_interval_half_len, digits=3),
     " err:",   format(100*error_rate[1], digits=3),
     "% ",
     " dup:",  format(adups, digits=3),
@@ -452,12 +462,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Linear Plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
+    "±", prettyNum(total_len_conf_interval_half_len, big.mark=","),
     "bp",
-    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    " uniq:", format(100*(aunique_len/atotal_len), digits=3),
+    #"±", format(100*(unique_len_conf_interval_half_len/atotal_len), digits=3),
     "% ", "\n",
     hetline, "\n",
-    " kcov:", format(akcov, digits=3),
+    " kcov:", format(akcov, digits=3), "±", format(kcov_conf_interval_half_len, digits=3),
     " err:",   format(100*error_rate[1], digits=3),
     "% ",
     " dup:",  format(adups, digits=3),
@@ -501,12 +513,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Log plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
+    "±", prettyNum(total_len_conf_interval_half_len, big.mark=","),
     "bp",
-    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    " uniq:", format(100*(aunique_len/atotal_len), digits=3),
+    #"±", format(100*(unique_len_conf_interval_half_len/atotal_len), digits=3),
     "% ", "\n",
     hetline, "\n",
-    " kcov:", format(akcov, digits=3),
+    " kcov:", format(akcov, digits=3), "±", format(kcov_conf_interval_half_len, digits=3),
     " err:",   format(100*error_rate[1], digits=3),
     "% ",
     " dup:",  format(adups, digits=3),
@@ -573,12 +587,14 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
     dev.set(dev.next())
 
     ## Finish Log plot
-    title(paste("\n\nlen:",  prettyNum(total_len[1], big.mark=","),
+    title(paste("\n\nlen:",  prettyNum(atotal_len, big.mark=","),
+    "±", prettyNum(total_len_conf_interval_half_len, big.mark=","),
     "bp",
-    " uniq:", format(100*(unique_len[1]/total_len[1]), digits=3),
+    " uniq:", format(100*(aunique_len/atotal_len), digits=3),
+    #"±", format(100*(unique_len_conf_interval_half_len/atotal_len), digits=3),
     "% ", "\n",
     hetline, "\n",
-    " kcov:", format(akcov, digits=3),
+    " kcov:", format(akcov, digits=3), "±", format(kcov_conf_interval_half_len, digits=3),
     " err:",   format(100*error_rate[1], digits=3),
     "% ",
     " dup:",  format(adups, digits=3),
@@ -649,7 +665,7 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
       " kcov:", format(akcov, digits=3),
       " err:", format(error_rate[1], digits=3),
       " model fit:", format(adups, digits=3),
-      " len:", round(total_len[1]), "\n", sep=""))
+      " len:", round(atotal_len), "\n", sep=""))
     }
   }
   else
@@ -665,6 +681,15 @@ report_results<-function(kmer_hist,kmer_hist_orig, k, p, container, foldername, 
   dev.off()
   dev.off()
   dev.off()
+
+  ## write major stats to stat file
+  majorStatsFile <- paste(foldername,"/", arguments$name_prefix, "stats.tsv",sep="")
+  cat(paste("#Stat", "Value", "Min", "Max", "Half confidence interval length", sep="\t"),
+      paste("Haplome coverage (λ)", akcov, kcov[1], kcov[2], kcov_conf_interval_half_len, sep="\t"),
+      paste("Genome Haploid Length", atotal_len, total_len[2], total_len[1], total_len_conf_interval_half_len, sep="\t"),
+      paste("Genome Repeat Length", arepeat_len, repeat_len[2], repeat_len[1], repeat_len_conf_interval_half_len, sep="\t"),
+      paste("Genome Unique Length", aunique_len, unique_len[2], unique_len[1], unique_len_conf_interval_half_len, sep="\t"),
+      file=majorStatsFile, sep="\n")
 
   ## Write key values to summary file
   summaryFile <- paste(foldername,"/", arguments$name_prefix, "summary.txt",sep="")
