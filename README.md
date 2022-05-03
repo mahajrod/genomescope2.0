@@ -1,3 +1,4 @@
+# This version was modified to report genome size estimates and corresponding confidence intervals in machine-readable way 
 # GenomeScope 2.0: Reference-free profiling of polyploid genomes
 ## T. Rhyker Ranallo-Benavidez, Kamil S. Jaron, and Michael C. Schatz
 
